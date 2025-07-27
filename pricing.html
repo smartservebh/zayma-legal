@@ -1,0 +1,467 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>خطط أسعار ZAYMA</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Cairo:wght@400;700;900&display=swap');
+        
+        body {
+            font-family: 'Cairo', sans-serif;
+            background: linear-gradient(135deg, #f8f9fc 0%, #e3f2fd 100%);
+            color: #333;
+            margin: 0;
+            padding: 40px 20px;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 60px;
+        }
+
+        .header h1 {
+            font-size: 3.5rem;
+            font-weight: 900;
+            background: linear-gradient(135deg, #2563EB, #1D4ED8);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 15px;
+        }
+
+        .header p {
+            font-size: 1.3rem;
+            color: #6B7280;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .billing-toggle {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 50px;
+        }
+
+        .toggle-container {
+            background: white;
+            border-radius: 20px;
+            padding: 8px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.08);
+            display: flex;
+            position: relative;
+        }
+
+        .toggle-btn {
+            padding: 12px 24px;
+            border-radius: 16px;
+            background: transparent;
+            border: none;
+            font-weight: 700;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            color: #6B7280;
+            position: relative;
+        }
+
+        .toggle-btn.active {
+            background: linear-gradient(135deg, #2563EB, #1D4ED8);
+            color: white;
+            box-shadow: 0 4px 15px rgba(37, 99, 235, 0.3);
+        }
+
+        .savings-badge {
+            position: absolute;
+            top: -8px;
+            right: -8px;
+            background: #F59E0B;
+            color: white;
+            font-size: 0.75rem;
+            padding: 4px 8px;
+            border-radius: 12px;
+            font-weight: bold;
+        }
+
+        .pricing-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+            margin-bottom: 80px;
+        }
+
+        .plan-card {
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.08);
+            padding: 40px 30px;
+            border: 3px solid transparent;
+            transition: all 0.4s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .plan-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 6px;
+            background: linear-gradient(135deg, #E5E7EB, #D1D5DB);
+        }
+
+        .plan-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 25px 60px rgba(0, 0, 0, 0.15);
+        }
+
+        .plan-card.popular {
+            border-color: #6366F1;
+            transform: scale(1.05);
+        }
+
+        .plan-card.popular::before {
+            background: linear-gradient(135deg, #8B5CF6, #6366F1);
+        }
+
+        .popular-badge {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: linear-gradient(135deg, #F59E0B, #F97316);
+            color: white;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: bold;
+            box-shadow: 0 4px 15px rgba(249, 115, 22, 0.3);
+        }
+
+        .plan-header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .plan-name {
+            font-size: 2rem;
+            font-weight: 900;
+            margin-bottom: 10px;
+            color: #1F2937;
+        }
+
+        .plan-price {
+            font-size: 3.5rem;
+            font-weight: 900;
+            color: #2563EB;
+            margin-bottom: 5px;
+        }
+
+        .plan-price .currency {
+            font-size: 1.2rem;
+            color: #6B7280;
+        }
+
+        .plan-period {
+            color: #6B7280;
+            font-size: 1rem;
+            margin-bottom: 15px;
+        }
+
+        .savings-text {
+            background: linear-gradient(135deg, #10B981, #059669);
+            color: white;
+            padding: 6px 12px;
+            border-radius: 15px;
+            font-size: 0.85rem;
+            font-weight: bold;
+            display: inline-block;
+        }
+
+        .plan-features {
+            list-style: none;
+            padding: 0;
+            margin: 30px 0;
+        }
+
+        .plan-features li {
+            margin-bottom: 15px;
+            display: flex;
+            align-items: flex-start;
+            font-size: 1rem;
+            color: #374151;
+        }
+
+        .plan-features li::before {
+            content: '✅';
+            margin-left: 12px;
+            font-size: 1.1rem;
+            flex-shrink: 0;
+        }
+
+        .plan-button {
+            width: 100%;
+            padding: 16px;
+            border-radius: 16px;
+            font-weight: bold;
+            font-size: 1.1rem;
+            border: none;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: block;
+            text-align: center;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #2563EB, #1D4ED8);
+            color: white;
+            box-shadow: 0 8px 25px rgba(37, 99, 235, 0.3);
+        }
+
+        .btn-primary:hover {
+            background: linear-gradient(135deg, #1D4ED8, #1E40AF);
+            transform: translateY(-2px);
+            box-shadow: 0 12px 35px rgba(37, 99, 235, 0.4);
+        }
+
+        .btn-outline {
+            background: transparent;
+            color: #2563EB;
+            border: 2px solid #2563EB;
+        }
+
+        .btn-outline:hover {
+            background: #EFF6FF;
+            transform: translateY(-2px);
+        }
+
+        .info-section {
+            background: white;
+            border-radius: 24px;
+            padding: 50px 40px;
+            box-shadow: 0 15px 40px rgba(0,0,0,0.08);
+            text-align: center;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .info-section h2 {
+            font-size: 2rem;
+            font-weight: 900;
+            color: #1F2937;
+            margin-bottom: 30px;
+        }
+
+        .info-list {
+            list-style: none;
+            padding: 0;
+            text-align: right;
+        }
+
+        .info-list li {
+            margin-bottom: 20px;
+            display: flex;
+            align-items: flex-start;
+            font-size: 1.1rem;
+            color: #374151;
+        }
+
+        .info-list li::before {
+            content: '✅';
+            margin-left: 15px;
+            color: #10B981;
+            font-size: 1.3rem;
+            flex-shrink: 0;
+        }
+
+        .footer-note {
+            background: linear-gradient(135deg, #EFF6FF, #DBEAFE);
+            border: 2px solid #BFDBFE;
+            border-radius: 16px;
+            padding: 25px;
+            margin-top: 30px;
+            text-align: center;
+        }
+
+        .footer-note p {
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: #1E40AF;
+            margin: 0;
+        }
+
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 2.5rem;
+            }
+            
+            .plan-card {
+                padding: 30px 20px;
+            }
+            
+            .plan-card.popular {
+                transform: none;
+            }
+            
+            .info-section {
+                padding: 30px 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>خطط أسعار ZAYMA</h1>
+            <p>اختر الخطة المناسبة لاحتياجاتك الرياضية والتدريبية</p>
+        </div>
+
+        <div class="billing-toggle">
+            <div class="toggle-container">
+                <button class="toggle-btn active" onclick="switchBilling('monthly')">شهري</button>
+                <button class="toggle-btn" onclick="switchBilling('annual')">
+                    سنوي
+                    <span class="savings-badge">وفر 26%</span>
+                </button>
+            </div>
+        </div>
+
+        <div class="pricing-grid">
+            <!-- Free Plan -->
+            <div class="plan-card">
+                <div class="plan-header">
+                    <div class="plan-name">مجاني</div>
+                    <div class="plan-price">
+                        0<span class="currency"> د.ب</span>
+                    </div>
+                    <div class="plan-period">مجاناً للأبد</div>
+                </div>
+                <ul class="plan-features">
+                    <li>3 تحاليل شهرياً</li>
+                    <li>برامج أساسية</li>
+                    <li>إحصائيات بسيطة</li>
+                    <li>دعم المجتمع</li>
+                </ul>
+                <button class="plan-button btn-outline">ابدأ مجاناً</button>
+            </div>
+
+            <!-- Plus Plan -->
+            <div class="plan-card">
+                <div class="plan-header">
+                    <div class="plan-name">Plus</div>
+                    <div class="plan-price" id="plus-price">
+                        2.99<span class="currency"> د.ب</span>
+                    </div>
+                    <div class="plan-period" id="plus-period">شهرياً</div>
+                    <div class="savings-text" id="plus-savings" style="display: none;">وفر 22%</div>
+                </div>
+                <ul class="plan-features">
+                    <li>10 تحاليل شهرياً</li>
+                    <li>برامج متقدمة</li>
+                    <li>إحصائيات مفصلة</li>
+                    <li>تحديات إضافية</li>
+                    <li>تقارير PDF</li>
+                </ul>
+                <button class="plan-button btn-primary">اختيار Plus</button>
+            </div>
+
+            <!-- Pro Plan -->
+            <div class="plan-card popular">
+                <div class="popular-badge">⭐ الأكثر شعبية</div>
+                <div class="plan-header">
+                    <div class="plan-name">Pro</div>
+                    <div class="plan-price" id="pro-price">
+                        5.99<span class="currency"> د.ب</span>
+                    </div>
+                    <div class="plan-period" id="pro-period">شهرياً</div>
+                    <div class="savings-text" id="pro-savings" style="display: none;">وفر 24%</div>
+                </div>
+                <ul class="plan-features">
+                    <li>تحاليل غير محدودة</li>
+                    <li>كل البرامج التدريبية</li>
+                    <li>تقارير مفصلة</li>
+                    <li>دعم أولوية</li>
+                    <li>تحليل متقدم للأداء</li>
+                    <li>إحصائيات شاملة</li>
+                </ul>
+                <button class="plan-button btn-primary">اختيار Pro</button>
+            </div>
+
+            <!-- Coach Plan -->
+            <div class="plan-card">
+                <div class="plan-header">
+                    <div class="plan-name">Coach</div>
+                    <div class="plan-price" id="coach-price">
+                        9.99<span class="currency"> د.ب</span>
+                    </div>
+                    <div class="plan-period" id="coach-period">شهرياً</div>
+                    <div class="savings-text" id="coach-savings" style="display: none;">وفر 26%</div>
+                </div>
+                <ul class="plan-features">
+                    <li>كل ميزات Pro</li>
+                    <li>إدارة الفرق والرياضيين</li>
+                    <li>تقارير جماعية</li>
+                    <li>أدوات المدرب المتخصصة</li>
+                    <li>لوحة إدارة متقدمة</li>
+                    <li>دعم مخصص 24/7</li>
+                </ul>
+                <button class="plan-button btn-primary">اختيار Coach</button>
+            </div>
+        </div>
+
+        <div class="info-section">
+            <h2>🎯 مميزات إضافية</h2>
+            <ul class="info-list">
+                <li>خطة مجانية تشمل 3 تحاليل شهرية وتمارين أساسية وتقارير بسيطة</li>
+                <li>ضمان استرداد خلال 30 يومًا على جميع الخطط المدفوعة</li>
+                <li>إمكانية الإلغاء في أي وقت من لوحة المستخدم</li>
+                <li>لا رسوم خفية</li>
+            </ul>
+            <div class="footer-note">
+                <p>💬 كل الأسعار بالدينار البحريني (BHD) شاملة الضرائب</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function switchBilling(cycle) {
+            const buttons = document.querySelectorAll('.toggle-btn');
+            buttons.forEach(btn => btn.classList.remove('active'));
+            event.target.classList.add('active');
+
+            if (cycle === 'monthly') {
+                document.getElementById('plus-price').innerHTML = '2.99<span class="currency"> د.ب</span>';
+                document.getElementById('plus-period').textContent = 'شهرياً';
+                document.getElementById('plus-savings').style.display = 'none';
+
+                document.getElementById('pro-price').innerHTML = '5.99<span class="currency"> د.ب</span>';
+                document.getElementById('pro-period').textContent = 'شهرياً';
+                document.getElementById('pro-savings').style.display = 'none';
+
+                document.getElementById('coach-price').innerHTML = '9.99<span class="currency"> د.ب</span>';
+                document.getElementById('coach-period').textContent = 'شهرياً';
+                document.getElementById('coach-savings').style.display = 'none';
+            } else {
+                document.getElementById('plus-price').innerHTML = '28.00<span class="currency"> د.ب</span>';
+                document.getElementById('plus-period').textContent = 'سنوياً';
+                document.getElementById('plus-savings').style.display = 'inline-block';
+
+                document.getElementById('pro-price').innerHTML = '55.00<span class="currency"> د.ب</span>';
+                document.getElementById('pro-period').textContent = 'سنوياً';
+                document.getElementById('pro-savings').style.display = 'inline-block';
+
+                document.getElementById('coach-price').innerHTML = '89.00<span class="currency"> د.ب</span>';
+                document.getElementById('coach-period').textContent = 'سنوياً';
+                document.getElementById('coach-savings').style.display = 'inline-block';
+            }
+        }
+    </script>
+</body>
+</html>
