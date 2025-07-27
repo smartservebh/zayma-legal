@@ -1,0 +1,406 @@
+
+import React, { useState } from 'react';
+import { Button } from '@/components/ui/button';
+import { Textarea } from '@/components/ui/textarea';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Clipboard, Check } from 'lucide-react';
+
+const pricingHtml = `<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>الأسعار - Zayma</title>
+    <meta name="description" content="خطط أسعار تطبيق Zayma لتحليل الأداء الرياضي - اختر الخطة المناسبة لك">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #2d3748;
+            background: linear-gradient(135deg, #f7fafc 0%, #edf2f7 100%);
+            min-height: 100vh;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 40px 20px;
+        }
+        
+        .header {
+            text-align: center;
+            margin-bottom: 60px;
+        }
+        
+        .header h1 {
+            font-size: 3rem;
+            font-weight: 800;
+            color: #2d3748;
+            margin-bottom: 20px;
+            background: linear-gradient(135deg, #2563eb, #1d4ed8);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        .header p {
+            font-size: 1.2rem;
+            color: #718096;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        
+        .pricing-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 30px;
+            margin-bottom: 80px;
+        }
+        
+        .pricing-card {
+            background: white;
+            border-radius: 20px;
+            padding: 40px 30px;
+            text-align: center;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            position: relative;
+            border: 2px solid transparent;
+        }
+        
+        .pricing-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.15);
+        }
+        
+        .pricing-card.popular {
+            border: 2px solid #8b5cf6;
+            transform: scale(1.05);
+        }
+        
+        .popular-badge {
+            position: absolute;
+            top: -15px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #8b5cf6;
+            color: white;
+            padding: 8px 20px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            font-weight: 600;
+        }
+        
+        .plan-name {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: #2d3748;
+            margin-bottom: 10px;
+        }
+        
+        .plan-price {
+            font-size: 3rem;
+            font-weight: 800;
+            color: #2563eb;
+            margin-bottom: 5px;
+        }
+        
+        .plan-period {
+            color: #718096;
+            margin-bottom: 30px;
+            font-size: 1rem;
+        }
+        
+        .features-list {
+            list-style: none;
+            margin-bottom: 40px;
+            text-align: right;
+        }
+        
+        .features-list li {
+            padding: 8px 0;
+            display: flex;
+            align-items: center;
+        }
+        
+        .features-list li:before {
+            content: "✓";
+            color: #10b981;
+            font-weight: bold;
+            margin-left: 10px;
+            font-size: 1.2rem;
+        }
+        
+        .cta-button {
+            background: linear-gradient(135deg, #2563eb, #1d4ed8);
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 12px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            width: 100%;
+            transition: all 0.3s ease;
+        }
+        
+        .cta-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(37, 99, 235, 0.3);
+        }
+        
+        .free-card .cta-button {
+            background: linear-gradient(135deg, #10b981, #059669);
+        }
+        
+        .popular .cta-button {
+            background: linear-gradient(135deg, #8b5cf6, #7c3aed);
+        }
+
+        .info-section {
+            margin-bottom: 60px;
+        }
+
+        .launch-offer {
+            text-align: center;
+            background: linear-gradient(135deg, #8b5cf6, #7c3aed);
+            color: white;
+            padding: 30px;
+            border-radius: 20px;
+            margin-bottom: 40px;
+        }
+
+        .launch-offer h2 {
+            font-size: 1.8rem;
+            margin-bottom: 10px;
+        }
+
+        .info-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+        }
+        
+        .info-card {
+            background: white;
+            padding: 30px;
+            border-radius: 20px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.08);
+        }
+
+        .info-card h3 {
+            font-size: 1.5rem;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+        }
+
+        .info-card h3 span {
+            margin-right: 10px;
+        }
+
+        .info-card p, .info-card ul {
+            color: #4a5568;
+        }
+
+        .info-card ul {
+            list-style: none;
+        }
+
+        .info-card ul li {
+            margin-bottom: 8px;
+        }
+        
+        .footer {
+            text-align: center;
+            padding: 40px 20px;
+            border-top: 1px solid #e2e8f0;
+            color: #718096;
+            font-size: 0.9rem;
+        }
+
+        .footer p {
+            margin-bottom: 5px;
+        }
+        
+        @media (max-width: 768px) {
+            .container {
+                padding: 20px 15px;
+            }
+            
+            .header h1 {
+                font-size: 2.2rem;
+            }
+            
+            .pricing-card.popular {
+                transform: none;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <h1>خطط أسعار Zayma</h1>
+            <p>اختر الخطة المناسبة لأهدافك الرياضية وانطلق نحو مستوى جديد من الأداء</p>
+        </header>
+
+        <main>
+            <div class="pricing-grid">
+                
+                <div class="pricing-card free-card">
+                    <h2 class="plan-name">مجاني</h2>
+                    <div class="plan-price">0 د.ب</div>
+                    <div class="plan-period">/شهر</div>
+                    <ul class="features-list">
+                        <li>3 تحاليل شهرياً</li>
+                        <li>برامج أساسية</li>
+                        <li>إحصائيات بسيطة</li>
+                        <li>دعم عبر البريد</li>
+                    </ul>
+                    <button class="cta-button">ابدأ مجاناً</button>
+                </div>
+                
+                <div class="pricing-card">
+                    <h2 class="plan-name">Plus</h2>
+                    <div class="plan-price">1.99 د.ب</div>
+                    <div class="plan-period">/شهر</div>
+                    <ul class="features-list">
+                        <li>10 تحاليل شهرياً</li>
+                        <li>برامج متقدمة</li>
+                        <li>إحصائيات مفصلة</li>
+                        <li>تحديات إضافية</li>
+                    </ul>
+                    <button class="cta-button">اختر Plus</button>
+                </div>
+                
+                <div class="pricing-card popular">
+                    <div class="popular-badge">الأكثر شعبية</div>
+                    <h2 class="plan-name">Pro</h2>
+                    <div class="plan-price">3.99 د.ب</div>
+                    <div class="plan-period">/شهر</div>
+                    <ul class="features-list">
+                        <li>تحاليل غير محدودة</li>
+                        <li>كل البرامج والتحديات</li>
+                        <li>تقارير PDF مفصلة</li>
+                        <li>دعم فوري وأولوية</li>
+                    </ul>
+                    <button class="cta-button">اختر Pro</button>
+                </div>
+
+                <div class="pricing-card">
+                    <h2 class="plan-name">Coach</h2>
+                    <div class="plan-price">7.99 د.ب</div>
+                    <div class="plan-period">/شهر</div>
+                    <ul class="features-list">
+                        <li>كل ميزات Pro</li>
+                        <li>إدارة الفرق (حتى 25 لاعب)</li>
+                        <li>تقارير جماعية وتحليلات</li>
+                        <li>أدوات خاصة للمدربين</li>
+                    </ul>
+                    <button class="cta-button">اختر Coach</button>
+                </div>
+                
+            </div>
+
+            <section class="info-section">
+
+                <div class="launch-offer">
+                    <h2>🎁 عروض الإطلاق الخاصة</h2>
+                    <p>خصم 50% على جميع الخطط المدفوعة لأول 3 أشهر!</p>
+                </div>
+
+                <div class="info-grid">
+                    <div class="info-card">
+                        <h3><span>💳</span> طرق الدفع المتاحة</h3>
+                        <p>BenefitPay • STC Pay • بطاقات الائتمان • PayPal</p>
+                    </div>
+                    <div class="info-card">
+                        <h3><span>🔒</span> ضماناتنا لك</h3>
+                        <ul>
+                            <li>• تجربة مجانية 7 أيام</li>
+                            <li>• ضمان استرداد 30 يوم</li>
+                            <li>• إلغاء في أي وقت</li>
+                            <li>• لا رسوم خفية</li>
+                        </ul>
+                    </div>
+                </div>
+
+            </section>
+        </main>
+        
+        <footer class="footer">
+            <p>جميع الأسعار بالدينار البحريني (BHD) شاملة الضرائب.</p>
+            <p>الأسعار قابلة للتغيير مع إشعار مسبق 30 يوماً.</p>
+            <p>© 2025 ZAYMA. جميع الحقوق محفوظة.</p>
+            <p>🇧🇭 مملكة البحرين | 📧 support@zayma.online</p>
+        </footer>
+    </div>
+</body>
+</html>`;
+
+export default function GitHubPricing() {
+    const [copied, setCopied] = useState(false);
+
+    const copyToClipboard = async () => {
+        try {
+            await navigator.clipboard.writeText(pricingHtml);
+            setCopied(true);
+            setTimeout(() => setCopied(false), 3000);
+        } catch (err) {
+            console.error('Failed to copy: ', err);
+        }
+    };
+
+    return (
+        <div className="p-6 max-w-4xl mx-auto">
+            <Card>
+                <CardHeader>
+                    <CardTitle className="text-2xl font-bold text-blue-600">
+                        📋 كود صفحة الأسعار لـ GitHub
+                    </CardTitle>
+                    <p className="text-gray-600">
+                        انسخ هذا الكود وأنشئ ملف <code className="bg-gray-100 px-2 py-1 rounded">pricing.html</code> في مستودع GitHub الخاص بك
+                    </p>
+                </CardHeader>
+                <CardContent>
+                    <div className="space-y-4">
+                        <div className="flex justify-between items-center">
+                            <h3 className="font-semibold">pricing.html</h3>
+                            <Button onClick={copyToClipboard} className="flex items-center gap-2">
+                                {copied ? <Check className="w-4 h-4" /> : <Clipboard className="w-4 h-4" />}
+                                {copied ? 'تم النسخ!' : 'نسخ الكود'}
+                            </Button>
+                        </div>
+                        <Textarea
+                            value={pricingHtml}
+                            readOnly
+                            className="h-96 font-mono text-xs"
+                        />
+                        <div className="bg-blue-50 p-4 rounded-lg">
+                            <h4 className="font-semibold text-blue-800 mb-2">📝 خطوات الرفع على GitHub:</h4>
+                            <ol className="list-decimal list-inside space-y-1 text-sm text-blue-700">
+                                <li>انسخ الكود أعلاه</li>
+                                <li>اذهب إلى مستودع <code>zayma-legal</code> على GitHub</li>
+                                <li>انقر على "Add file" {">"} "Create new file"</li>
+                                <li>اكتب اسم الملف: <code>pricing.html</code></li>
+                                <li>الصق الكود في المحرر</li>
+                                <li>انقر "Commit new file"</li>
+                            </ol>
+                        </div>
+                        <div className="bg-green-50 p-4 rounded-lg">
+                            <p className="text-green-800 font-semibold">🔗 الرابط النهائي سيكون:</p>
+                            <p className="font-mono text-green-700">https://username.github.io/zayma-legal/pricing.html</p>
+                        </div>
+                    </div>
+                </CardContent>
+            </Card>
+        </div>
+    );
+}
