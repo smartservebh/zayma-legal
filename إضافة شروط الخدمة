@@ -1,206 +1,0 @@
-import React, { useState } from 'react';
-import { Button } from '@/components/ui/button';
-import { Textarea } from '@/components/ui/textarea';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Clipboard, Check } from 'lucide-react';
-
-const termsHtml = `<!DOCTYPE html>
-<html lang="ar" dir="rtl">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>شروط الخدمة - Zayma</title>
-    <meta name="description" content="شروط وأحكام استخدام تطبيق Zayma لتحليل الأداء الرياضي">
-    <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; line-height: 1.8; color: #2d3748; background-color: #f7fafc; }
-        .container { max-width: 800px; margin: 0 auto; padding: 40px 20px; }
-        .header { background: linear-gradient(135deg, #2563eb, #1d4ed8); color: white; padding: 60px 40px; border-radius: 20px; text-align: center; margin-bottom: 40px; box-shadow: 0 20px 40px rgba(37, 99, 235, 0.1); }
-        .header h1 { font-size: 2.5rem; font-weight: 800; margin-bottom: 10px; }
-        .header .subtitle { font-size: 1.1rem; color: white; }
-        .content { background: white; padding: 50px; border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.1); }
-        h2 { color: #2563eb; font-size: 1.5rem; margin: 40px 0 20px 0; padding-bottom: 10px; border-bottom: 2px solid #e2e8f0; }
-        h3 { color: #4a5568; margin: 30px 0 15px 0; }
-        p, li { color: #4a5568; margin-bottom: 1rem; }
-        ul { margin: 20px 0; padding-right: 30px; }
-        .highlight { background: #fffaf0; border-right: 4px solid #f6ad55; padding: 20px; margin: 30px 0; border-radius: 10px; }
-        .footer { text-align: center; margin-top: 40px; padding-top: 30px; border-top: 2px solid #e2e8f0; color: #718096; font-size: 0.9rem; }
-    </style>
-</head>
-<body>
-    <div class="container">
-        <header class="header">
-            <h1>شروط الخدمة</h1>
-            <p class="subtitle">تطبيق Zayma لتحليل الأداء الرياضي</p>
-        </header>
-        <main class="content">
-            <p style="text-align: center; color: #718096;"><strong>تاريخ آخر تحديث:</strong> يناير 2025</p>
-            <h2>1. القبول بالشروط</h2>
-            <p>باستخدام تطبيق Zayma، فإنك توافق على الالتزام بهذه الشروط والأحكام.</p>
-            <div class="highlight">
-                <h3>⚠️ تنبيه مهم</h3>
-                <p><strong>Zayma هو تطبيق رياضي تحليلي ولا يقدم:</strong></p>
-                <ul>
-                    <li>تشخيص طبي أو استشارة صحية</li>
-                    <li>علاج أو وصفات طبية</li>
-                    <li>بديل عن زيارة الطبيب المختص</li>
-                </ul>
-            </div>
-            <h2>3. حسابات المستخدمين</h2>
-            <p>يجب أن تكون 13 سنة أو أكبر لاستخدام التطبيق ومسؤول عن حماية كلمة المرور الخاصة بك.</p>
-            <h2>4. الاشتراكات والدفع</h2>
-            <p>الاشتراكات تتجدد تلقائياً ويمكن إلغاؤها في أي وقت. تتم معالجة المدفوعات عبر بوابات دفع آمنة.</p>
-             <h2>5. إخلاء المسؤولية</h2>
-            <p>النتائج المقدمة استرشادية وليست بديلاً عن استشارة طبية. استخدم التطبيق على مسؤوليتك الشخصية.</p>
-        </main>
-        <footer class="footer">
-            <p>© 2025 ZAYMA. جميع الحقوق محفوظة.</p>
-            <p>🇧🇭 مملكة البحرين | 📧 support@zayma.online</p>
-        </footer>
-    </div>
-</body>
-</html>`;
-
-const privacyHtml = `<!DOCTYPE html>
-<html lang="ar" dir="rtl">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>سياسة الخصوصية - Zayma</title>
-    <meta name="description" content="سياسة الخصوصية لتطبيق Zayma وكيفية تعاملنا مع بيانات المستخدمين.">
-    <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; line-height: 1.8; color: #2d3748; background-color: #f7fafc; }
-        .container { max-width: 800px; margin: 0 auto; padding: 40px 20px; }
-        .header { background: linear-gradient(135deg, #2563eb, #1d4ed8); color: white; padding: 60px 40px; border-radius: 20px; text-align: center; margin-bottom: 40px; box-shadow: 0 20px 40px rgba(37, 99, 235, 0.1); }
-        .header h1 { font-size: 2.5rem; font-weight: 800; margin-bottom: 10px; }
-        .header .subtitle { font-size: 1.1rem; color: white; }
-        .content { background: white; padding: 50px; border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.1); }
-        h2 { color: #2563eb; font-size: 1.5rem; margin: 40px 0 20px 0; padding-bottom: 10px; border-bottom: 2px solid #e2e8f0; }
-        h3 { color: #4a5568; margin: 30px 0 15px 0; }
-        p, li { color: #4a5568; margin-bottom: 1rem; }
-        ul { margin: 20px 0; padding-right: 30px; }
-        .highlight { background: #e6fffa; border-right: 4px solid #38b2ac; padding: 20px; margin: 30px 0; border-radius: 10px; }
-        .footer { text-align: center; margin-top: 40px; padding-top: 30px; border-top: 2px solid #e2e8f0; color: #718096; font-size: 0.9rem; }
-    </style>
-</head>
-<body>
-    <div class="container">
-        <header class="header">
-            <h1>سياسة الخصوصية</h1>
-            <p class="subtitle">تطبيق Zayma لتحليل الأداء الرياضي</p>
-        </header>
-        <main class="content">
-            <p style="text-align: center; color: #718096;"><strong>تاريخ آخر تحديث:</strong> يناير 2025</p>
-            <div class="highlight">
-                <h3>🔒 خصوصيتك أولويتنا</h3>
-                <p>نحن ملتزمون بحماية بياناتك الشخصية. يتم حذف الفيديوهات خلال 24 ساعة ولا نشارك بياناتك مع أي طرف ثالث.</p>
-            </div>
-            <h2>1. المعلومات التي نجمعها</h2>
-            <p>نجمع المعلومات الضرورية لتقديم الخدمة فقط، وتشمل الاسم، البريد الإلكتروني، وبيانات التحليل الرياضي.</p>
-            <h2>2. كيفية استخدام المعلومات</h2>
-            <p>تستخدم المعلومات لتحسين دقة التحليل، تخصيص البرامج التدريبية، والتواصل معك بشأن حسابك.</p>
-            <h2>3. حقوقك</h2>
-            <p>لك الحق في الوصول إلى بياناتك، تصحيحها، أو حذفها في أي وقت من خلال إعدادات حسابك أو بالتواصل معنا.</p>
-        </main>
-        <footer class="footer">
-            <p>© 2025 ZAYMA. جميع الحقوق محفوظة.</p>
-            <p>🇧🇭 مملكة البحرين | 📧 support@zayma.online</p>
-        </footer>
-    </div>
-</body>
-</html>`;
-
-const refundHtml = `<!DOCTYPE html>
-<html lang="ar" dir="rtl">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>سياسة الاسترداد - Zayma</title>
-    <meta name="description" content="سياسة الاسترداد وضمان استعادة الأموال في تطبيق Zayma.">
-    <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; line-height: 1.8; color: #2d3748; background-color: #f7fafc; }
-        .container { max-width: 800px; margin: 0 auto; padding: 40px 20px; }
-        .header { background: linear-gradient(135deg, #2563eb, #1d4ed8); color: white; padding: 60px 40px; border-radius: 20px; text-align: center; margin-bottom: 40px; box-shadow: 0 20px 40px rgba(37, 99, 235, 0.1); }
-        .header h1 { font-size: 2.5rem; font-weight: 800; margin-bottom: 10px; }
-        .header .subtitle { font-size: 1.1rem; color: white; }
-        .content { background: white; padding: 50px; border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.1); }
-        h2 { color: #2563eb; font-size: 1.5rem; margin: 40px 0 20px 0; padding-bottom: 10px; border-bottom: 2px solid #e2e8f0; }
-        p, li { color: #4a5568; margin-bottom: 1rem; }
-        ul { margin: 20px 0; padding-right: 30px; }
-        .highlight { background: #f0fff4; border-right: 4px solid #48bb78; padding: 20px; margin: 30px 0; border-radius: 10px; }
-        .footer { text-align: center; margin-top: 40px; padding-top: 30px; border-top: 2px solid #e2e8f0; color: #718096; font-size: 0.9rem; }
-    </style>
-</head>
-<body>
-    <div class="container">
-        <header class="header">
-            <h1>سياسة الاسترداد</h1>
-            <p class="subtitle">تطبيق Zayma لتحليل الأداء الرياضي</p>
-        </header>
-        <main class="content">
-            <p style="text-align: center; color: #718096;"><strong>تاريخ آخر تحديث:</strong> يناير 2025</p>
-            <div class="highlight">
-                <h3>ضمان الرضا لمدة 7 أيام</h3>
-                <p>إذا لم تكن راضياً عن الخدمة، يمكنك طلب استرداد كامل للمبلغ خلال 7 أيام من تاريخ الاشتراك.</p>
-            </div>
-            <h2>1. طلبات الاسترداد</h2>
-            <p>لطلب استرداد، يرجى التواصل مع فريق الدعم على <a href="mailto:support@zayma.online">support@zayma.online</a> مع تزويدنا بمعلومات اشتراكك.</p>
-            <h2>2. معالجة الطلب</h2>
-            <p>تتم معالجة طلبات الاسترداد خلال 5-7 أيام عمل. سيتم إعادة المبلغ إلى نفس وسيلة الدفع المستخدمة.</p>
-            <h2>3. الاستثناءات</h2>
-            <p>لا يتم قبول طلبات الاسترداد بعد مرور 7 أيام على الاشتراك. الاشتراكات التي تم تجديدها لا تخضع لسياسة الاسترداد.</p>
-        </main>
-        <footer class="footer">
-            <p>© 2025 ZAYMA. جميع الحقوق محفوظة.</p>
-            <p>🇧🇭 مملكة البحرين | 📧 support@zayma.online</p>
-        </footer>
-    </div>
-</body>
-</html>`;
-
-const CodeBlock = ({ title, code }) => {
-    const [copied, setCopied] = useState(false);
-
-    const handleCopy = () => {
-        navigator.clipboard.writeText(code);
-        setCopied(true);
-        setTimeout(() => setCopied(false), 2000);
-    };
-
-    return (
-        <Card>
-            <CardHeader className="flex flex-row items-center justify-between p-4 bg-gray-50">
-                <CardTitle className="text-lg">{title}</CardTitle>
-                <Button variant="ghost" size="icon" onClick={handleCopy}>
-                    {copied ? <Check className="w-5 h-5 text-green-500" /> : <Clipboard className="w-5 h-5" />}
-                </Button>
-            </CardHeader>
-            <CardContent className="p-0">
-                <Textarea 
-                  readOnly 
-                  value={code} 
-                  className="h-96 font-mono text-sm bg-gray-900 text-gray-100 rounded-t-none border-0 focus-visible:ring-0" 
-                />
-            </CardContent>
-        </Card>
-    );
-};
-
-export default function LegalCodePage() {
-    return (
-        <div className="p-4 sm:p-6 md:p-8 space-y-8 bg-gray-100 min-h-screen" dir="ltr">
-            <div className="text-center">
-                <h1 className="text-3xl font-bold text-gray-800">HTML Code for Legal Pages</h1>
-                <p className="text-gray-600 mt-2">
-                  Copy the code for each page and add it to your GitHub repository as an `.html` file.<br />
-                  (e.g., create a file named `terms.html` and paste the code inside).
-                </p>
-            </div>
-            <CodeBlock title="1. Terms of Service (terms.html)" code={termsHtml} />
-            <CodeBlock title="2. Privacy Policy (privacy.html)" code={privacyHtml} />
-            <CodeBlock title="3. Refund Policy (refund.html)" code={refundHtml} />
-        </div>
-    );
-}
