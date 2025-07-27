@@ -1,0 +1,375 @@
+
+import React, { useState } from 'react';
+import { Button } from '@/components/ui/button';
+import { Textarea } from '@/components/ui/textarea';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Clipboard, Check } from 'lucide-react';
+
+const pricingHtml = `<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>خطط أسعار ZAYMA</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Cairo:wght@400;700;900&display=swap');
+        
+        body {
+            font-family: 'Cairo', sans-serif;
+            background-color: #f8f9fc;
+            color: #333;
+            margin: 0;
+            padding: 40px 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 50px;
+        }
+
+        .header h1 {
+            font-size: 3rem;
+            font-weight: 900;
+            background: linear-gradient(135deg, #2563EB, #1D4ED8);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 10px;
+        }
+
+        .header p {
+            font-size: 1.2rem;
+            color: #555;
+        }
+
+        .pricing-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 25px;
+            margin-bottom: 50px;
+        }
+
+        .card {
+            background: white;
+            border-radius: 16px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
+            padding: 30px;
+            border: 2px solid #e5e7eb;
+            transition: all 0.3s ease;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.12);
+        }
+        
+        .card.popular {
+            border-color: #6366F1;
+        }
+
+        .card-header {
+            text-align: center;
+            margin-bottom: 25px;
+        }
+
+        .card-title {
+            font-size: 1.8rem;
+            font-weight: 700;
+            margin-bottom: 10px;
+        }
+        
+        .card-price {
+            font-size: 3rem;
+            font-weight: 900;
+            color: #2563EB;
+        }
+
+        .card-price span {
+            font-size: 1rem;
+            font-weight: normal;
+            color: #666;
+        }
+
+        .card-features {
+            list-style: none;
+            padding: 0;
+            margin-bottom: 30px;
+            flex-grow: 1;
+        }
+
+        .card-features li {
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+        }
+        
+        .card-features li::before {
+            content: '✅';
+            margin-left: 10px;
+            color: #10B981;
+        }
+
+        .card-button {
+            display: block;
+            width: 100%;
+            padding: 15px;
+            border-radius: 12px;
+            text-decoration: none;
+            font-weight: bold;
+            font-size: 1rem;
+            transition: background-color 0.3s ease;
+            border: none;
+            cursor: pointer;
+            text-align: center; /* Added for correct text alignment */
+        }
+        
+        .btn-primary {
+            background-color: #2563EB;
+            color: white;
+        }
+        .btn-primary:hover {
+            background-color: #1D4ED8;
+        }
+        
+        .btn-outline {
+            background-color: transparent;
+            color: #2563EB;
+            border: 2px solid #2563EB;
+        }
+        
+        .btn-outline:hover {
+            background-color: #eff6ff;
+        }
+
+        .info-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 25px;
+            margin: 50px 0;
+        }
+
+        .info-card {
+            background: white;
+            border-radius: 16px;
+            padding: 25px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+        }
+        
+        .info-card h3 {
+            font-size: 1.3rem;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+        }
+        
+        .info-card ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        .info-card ul li {
+            margin-bottom: 10px;
+            display: flex;
+            align-items: flex-start;
+        }
+        
+        .info-card ul li::before {
+            content: '✅';
+            margin-left: 10px;
+            color: #10B981;
+            margin-top: 3px;
+        }
+
+        .launch-offer {
+            background: linear-gradient(135deg, #8B5CF6, #6366F1);
+            color: white;
+            padding: 30px;
+            text-align: center;
+            border-radius: 16px;
+            margin-bottom: 50px;
+        }
+        
+        .launch-offer h2 {
+            font-size: 2rem;
+            margin-bottom: 10px;
+        }
+
+        .footer {
+            text-align: center;
+            margin-top: 40px;
+            padding-top: 20px;
+            border-top: 1px solid #e5e7eb;
+        }
+        
+        .footer p {
+            color: #555;
+            font-size: 1rem;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <div class="header">
+            <h1>خطط أسعار ZAYMA</h1>
+            <p>اختر الخطة المناسبة لاحتياجاتك وانطلق في رحلتك الرياضية</p>
+        </div>
+
+        <div class="pricing-grid">
+            <div class="card">
+                <div class="card-header">
+                    <h2 class="card-title">مجاني</h2>
+                    <div class="card-price">0 <span>د.ب / شهرياً</span></div>
+                </div>
+                <ul class="card-features">
+                    <li>3 تحاليل شهرياً</li>
+                    <li>برامج أساسية</li>
+                    <li>إحصائيات بسيطة</li>
+                    <li>دعم المجتمع</li>
+                </ul>
+                <a href="#" class="card-button btn-outline">ابدأ مجاناً</a>
+            </div>
+            
+            <div class="card popular">
+                <div class="card-header">
+                    <h2 class="card-title">Plus</h2>
+                    <div class="card-price">2.99 <span>د.ب / شهرياً</span></div>
+                </div>
+                <ul class="card-features">
+                    <li>10 تحاليل شهرياً</li>
+                    <li>برامج متقدمة</li>
+                    <li>إحصائيات مفصلة</li>
+                    <li>تحديات إضافية</li>
+                    <li>تقارير PDF</li>
+                </ul>
+                <a href="#" class="card-button btn-primary">اختيار الخطة</a>
+            </div>
+            
+            <div class="card">
+                <div class="card-header">
+                    <h2 class="card-title">Pro</h2>
+                    <div class="card-price">5.99 <span>د.ب / شهرياً</span></div>
+                </div>
+                <ul class="card-features">
+                    <li>تحاليل غير محدودة</li>
+                    <li>كل البرامج</li>
+                    <li>تقارير مفصلة</li>
+                    <li>دعم أولوية</li>
+                    <li>تحليل متقدم</li>
+                </ul>
+                <a href="#" class="card-button btn-primary">اختيار الخطة</a>
+            </div>
+            
+            <div class="card">
+                <div class="card-header">
+                    <h2 class="card-title">Coach</h2>
+                    <div class="card-price">9.99 <span>د.ب / شهرياً</span></div>
+                </div>
+                <ul class="card-features">
+                    <li>كل ميزات Pro</li>
+                    <li>إدارة الفرق</li>
+                    <li>تقارير جماعية</li>
+                    <li>أدوات المدرب</li>
+                    <li>دعم مخصص</li>
+                </ul>
+                <a href="#" class="card-button btn-primary">اختيار الخطة</a>
+            </div>
+        </div>
+
+        <div class="launch-offer">
+            <h2>🎁 عروض الإطلاق الخاصة</h2>
+            <p>خصم 50% على جميع الخطط المدفوعة لأول 3 أشهر!</p>
+        </div>
+
+        <div class="info-grid">
+            <div class="info-card">
+                <h3>💳 طرق الدفع المتاحة</h3>
+                <p>BenefitPay • STC Pay • بطاقات الائتمان • PayPal</p>
+                <small style="color: #666;">عبر بوابة الدفع الآمنة Paddle</small>
+            </div>
+            <div class="info-card">
+                <h3>🔒 ضماناتنا لك</h3>
+                <ul>
+                    <li>خطة مجانية تشمل 3 تحاليل شهرية وتمارين أساسية وتقارير بسيطة</li>
+                    <li>ضمان استرداد خلال 30 يومًا على جميع الخطط المدفوعة</li>
+                    <li>إمكانية الإلغاء في أي وقت من لوحة المستخدم</li>
+                    <li>لا رسوم خفية</li>
+                </ul>
+            </div>
+        </div>
+        
+        <footer class="footer">
+            <p>💬 كل الأسعار بالدينار البحريني (BHD) شاملة الضرائب.</p>
+        </footer>
+    </div>
+
+</body>
+</html>`;
+
+export default function GitHubPricing() {
+    const [copied, setCopied] = useState(false);
+
+    const copyToClipboard = async () => {
+        try {
+            await navigator.clipboard.writeText(pricingHtml);
+            setCopied(true);
+            setTimeout(() => setCopied(false), 3000);
+        } catch (err) {
+            console.error('Failed to copy: ', err);
+        }
+    };
+
+    return (
+        <div className="p-6 max-w-4xl mx-auto">
+            <Card>
+                <CardHeader>
+                    <CardTitle className="text-2xl font-bold text-blue-600">
+                        📋 كود صفحة الأسعار لـ GitHub
+                    </CardTitle>
+                    <p className="text-gray-600">
+                        انسخ هذا الكود وأنشئ ملف <code className="bg-gray-100 px-2 py-1 rounded">pricing.html</code> في مستودع GitHub الخاص بك
+                    </p>
+                </CardHeader>
+                <CardContent>
+                    <div className="space-y-4">
+                        <div className="flex justify-between items-center">
+                            <h3 className="font-semibold">pricing.html</h3>
+                            <Button onClick={copyToClipboard} className="flex items-center gap-2">
+                                {copied ? <Check className="w-4 h-4" /> : <Clipboard className="w-4 h-4" />}
+                                {copied ? 'تم النسخ!' : 'نسخ الكود'}
+                            </Button>
+                        </div>
+                        <Textarea
+                            value={pricingHtml}
+                            readOnly
+                            className="h-96 font-mono text-xs"
+                        />
+                        <div className="bg-blue-50 p-4 rounded-lg">
+                            <h4 className="font-semibold text-blue-800 mb-2">📝 خطوات الرفع على GitHub:</h4>
+                            <ol className="list-decimal list-inside space-y-1 text-sm text-blue-700">
+                                <li>انسخ الكود أعلاه</li>
+                                <li>اذهب إلى مستودع <code>zayma-legal</code> على GitHub</li>
+                                <li>انقر على "Add file" {">"} "Create new file"</li>
+                                <li>اكتب اسم الملف: <code>pricing.html</code></li>
+                                <li>الصق الكود في المحرر</li>
+                                <li>انقر "Commit new file"</li>
+                            </ol>
+                        </div>
+                        <div className="bg-green-50 p-4 rounded-lg">
+                            <p className="text-green-800 font-semibold">🔗 الرابط النهائي سيكون:</p>
+                            <p className="font-mono text-green-700">https://username.github.io/zayma-legal/pricing.html</p>
+                        </div>
+                    </div>
+                </CardContent>
+            </Card>
+        </div>
+    );
+}
